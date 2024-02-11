@@ -20,7 +20,7 @@ func initApp() {
 
 func main() {
 	rootCmd := &cobra.Command{
-		Use:   "ping-pong service",
+		Use:   "Run HTTP Server with notifier",
 		Short: "Main entry-point command for the application",
 	}
 
