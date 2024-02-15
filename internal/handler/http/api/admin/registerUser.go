@@ -1,31 +1,27 @@
 package admin
 
 import (
+	"context"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"net/http"
 	e "notify/internal/entity"
 )
 
-var info e.UserCommonInfo
-var cred e.UserCred
-
-func bindUserData(c *gin.Context) {
-	if err := c.ShouldBindJSON(&info); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	if err := c.ShouldBindJSON(&cred); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-}
-
 func (h *Handler) RegisterUser(c *gin.Context) {
-	bindUserData(c)
-	res, err := h.uc.CreateUserWithDetails(info, cred)
+	var user e.User
+	err := c.BindJSON(&user)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusOK, gin.H{"error": err.Error()})
+		h.logger.Info("invalid request:", zap.Error(err))
+		return
 	}
-	c.JSON(http.StatusOK, gin.H{"result": res})
+
+	result, err := h.uc.CreateUser(context.Background(), &user)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"result": result})
 }

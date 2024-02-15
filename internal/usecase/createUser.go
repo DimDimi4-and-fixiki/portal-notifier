@@ -1,7 +1,14 @@
 package usecase
 
-import e "notify/internal/entity"
+import (
+	"context"
+	e "notify/internal/entity"
+)
 
-func (u *UseCase) CreateUserWithDetails(info e.UserCommonInfo, cred e.UserCred) (e.User, error) {
-	return u.authService.CreateUserWithDetails(info, cred)
+func (u *UseCase) CreateUser(ctx context.Context, user *e.User) (e.UserDB, error) {
+	res, err := u.authService.CreateUser(ctx, user)
+	if err != nil {
+		return e.UserDB{}, err
+	}
+	return res, nil
 }

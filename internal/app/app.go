@@ -56,6 +56,11 @@ func NewApp() (*App, error) {
 		return nil, err
 	}
 
+	err = app.createUUIDPgExtension(pgConn)
+	if err != nil {
+		return nil, err
+	}
+
 	app.pg = pgConn
 	app.server = app.newGracefulServer()
 	app.c = NewContainer(app.pg, app.server.GetGracefulServer())

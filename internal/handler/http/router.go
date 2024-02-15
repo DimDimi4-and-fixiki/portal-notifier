@@ -24,10 +24,7 @@ func (r *Router) WithDebug() *Router {
 }
 
 func (r *Router) WithLogging() (*Router, error) {
-	log, err := logger.NewLogger()
-	if err != nil {
-		return r, err
-	}
+	log := logger.NewCustomLogger()
 	r.router.Use(ginzap.Ginzap(
 		log,
 		cfg.Get().Server.LogTimeFormat, true))

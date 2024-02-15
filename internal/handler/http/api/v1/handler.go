@@ -3,13 +3,14 @@ package v1
 import (
 	"context"
 	"github.com/gin-gonic/gin"
+	e "notify/internal/entity"
 	"notify/pkg/logger"
 )
 
 type UseCase interface {
 	SendProposal(ctx context.Context) (interface{}, error)
-	AuthUser(ctx context.Context, userID uint) (interface{}, error)
 	Pong(ctx context.Context) (interface{}, error)
+	CreateUser(ctx context.Context, user *e.User) (e.UserDB, error)
 }
 
 type Handler struct {

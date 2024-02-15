@@ -1,12 +1,22 @@
 package userrepo
 
 import (
+	"context"
+	"fmt"
 	e "notify/internal/entity"
 )
 
-func (r *Repository) GetByLogin(login string) (e.User, error) {
-	var user e.User
-	query := r.conn.Model(e.User{Cred: e.UserCred{Login: login}})
+func (r *Repository) GetByLogin(_ context.Context, login string) (*e.UserDB, error) {
+	var user e.UserDB
+	query := r.conn.Model(
+		e.UserDB{
+			Cred: e.HashedUserCred{Login: login},
+		},
+	)
 	res := r.conn.Model(query).First(&user)
-	return user, res.Error
+	if res.Error != nil {
+		return &user, fmt.Errorf("user login=%q %w %w",
+			login, res.Error, ErrGetUser)
+	}
+	return &user, nil
 }

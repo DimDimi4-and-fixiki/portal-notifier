@@ -1,15 +1,22 @@
 package userrepo
 
-import e "notify/internal/entity"
+import (
+	"context"
+	"fmt"
+	e "notify/internal/entity"
+)
 
-func (r *Repository) Create(user *e.User) (e.User, error) {
-	res := r.conn.Create(user)
-	return *user, res.Error
-}
+func (r *Repository) Create(_ context.Context, user *e.User) (*e.UserDB, error) {
+	var hashedUser e.UserDB
+	hashedUser, err := hashUser(*user)
+	if err != nil {
+		return nil, err
+	}
 
-func (r *Repository) CreateWithDetails(info e.UserCommonInfo, cred e.UserCred) (e.User, error) {
-	user := e.User{Cred: cred, Info: info}
-	res := r.conn.Create(&user)
-
-	return user, res.Error
+	res := r.conn.Create(&hashedUser)
+	if res.Error != nil {
+		return nil, fmt.Errorf("user login=%s %w %w",
+			user.Cred.Login, res.Error, ErrCreateUser)
+	}
+	return &hashedUser, nil
 }

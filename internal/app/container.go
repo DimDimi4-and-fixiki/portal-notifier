@@ -8,7 +8,6 @@ import (
 	"notify/internal/repository/pgrepo/userrepo"
 	"notify/internal/service/authservice"
 	"notify/internal/service/notifyservice"
-	"notify/internal/service/pingpong"
 	"notify/internal/usecase"
 )
 
@@ -38,10 +37,6 @@ func (c *Container) getPg() *gorm.DB {
 	return c.pg
 }
 
-func (c *Container) getHttpServer() *graceful.Server {
-	return c.httpServer
-}
-
 func (c *Container) getAuthService() *authservice.Service {
 
 	return authservice.NewService(c.getUserRepo())
@@ -50,11 +45,6 @@ func (c *Container) getAuthService() *authservice.Service {
 func (c *Container) getNotifyService() *notifyservice.Service {
 
 	return notifyservice.NewService(c.getUserRepo(), c.getProposalRepo())
-}
-
-func (c *Container) getPingPong() *pingpong.Service {
-
-	return pingpong.NewService()
 }
 
 func (c *Container) getUserRepo() *userrepo.Repository {

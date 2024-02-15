@@ -17,6 +17,9 @@ func NewLogger() (*zap.Logger, error) {
 }
 
 func NewSugar() *zap.SugaredLogger {
-	log, _ := zap.NewDevelopment()
-	return log.Sugar()
+	return zap.Must(basicConfig().Build()).Sugar()
+}
+
+func NewCustomLogger() *zap.Logger {
+	return zap.Must(basicConfig().Build())
 }

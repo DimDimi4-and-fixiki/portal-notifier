@@ -1,7 +1,14 @@
 package authservice
 
-import e "notify/internal/entity"
+import (
+	"context"
+	e "notify/internal/entity"
+)
 
-func (s *Service) CreateUserWithDetails(info e.UserCommonInfo, cred e.UserCred) (e.User, error) {
-	return s.userRepo.CreateWithDetails(info, cred)
+func (s *Service) CreateUser(ctx context.Context, user *e.User) (e.UserDB, error) {
+	res, err := s.userRepo.Create(ctx, user)
+	if err != nil {
+		return e.UserDB{}, err
+	}
+	return *res, nil
 }

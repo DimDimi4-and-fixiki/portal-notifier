@@ -1,9 +1,17 @@
 package usecase
 
-import e "notify/internal/entity"
+import (
+	"context"
+	"github.com/google/uuid"
+	e "notify/internal/entity"
+)
 
 type authService interface {
-	CreateUserWithDetails(info e.UserCommonInfo, cred e.UserCred) (e.User, error)
+	CreateUser(ctx context.Context, user *e.User) (e.UserDB, error)
+	UpdateUserInfo(ctx context.Context, id uuid.UUID, data e.UserCommonInfo) (e.UserDB, error)
+	Verify(ctx context.Context, u *e.User) (bool, error)
+	GetAllUsers(ctx context.Context) (*[]e.UserDB, error)
+	GetUser(ctx context.Context, data e.GetUserInput) (*e.UserDB, error)
 }
 
 type notifyService interface {

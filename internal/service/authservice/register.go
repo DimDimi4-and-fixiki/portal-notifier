@@ -5,8 +5,7 @@ import (
 	e "notify/internal/entity"
 )
 
-func (s *Service) Register(_ context.Context, info e.UserCommonInfo, cred e.UserCred) (e.User, error) {
-	user := e.User{Info: info, Cred: cred}
-	res, err := s.userRepo.Create(&user)
-	return res, err
+func (s *Service) RegisterUser(ctx context.Context, user *e.User) (e.UserDB, error) {
+	res, err := s.userRepo.Create(ctx, user)
+	return *res, err
 }

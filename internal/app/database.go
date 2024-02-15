@@ -27,3 +27,8 @@ func (a *App) newPgConnect(cfg config.DbConfig) (*gorm.DB, error) {
 	db, err := gorm.Open(postgres.New(pgConfig(cfg)), &gorm.Config{})
 	return db, err
 }
+
+func (a *App) createUUIDPgExtension(conn *gorm.DB) error {
+	res := conn.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
+	return res.Error
+}
