@@ -2,8 +2,18 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	_ "notify/docs"
 	"notify/internal/app"
 )
+
+// @BasePath /
+// @title Notifier API
+// @version 0.0.1
+// @Description Service for sending notifications to users
+
+// @contact.name Dima Kalinin
+// @contact.url https://dimdimi4-and-fixiki.github.io/dima-portal/
+// @contact.email kalinindima123@yandex.ru
 
 func RunHTTP() *cobra.Command {
 	cmd := &cobra.Command{

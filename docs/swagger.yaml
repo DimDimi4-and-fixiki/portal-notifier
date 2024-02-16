@@ -1,0 +1,115 @@
+basePath: /
+definitions:
+  entity.GetUserInput:
+    properties:
+      user_id:
+        type: string
+      user_login:
+        type: string
+    type: object
+  entity.HttpResp-entity_UserCommonInfo:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      meta:
+        type: string
+      result:
+        $ref: '#/definitions/entity.UserCommonInfo'
+    type: object
+  entity.User:
+    properties:
+      cred:
+        $ref: '#/definitions/entity.UserCred'
+      info:
+        $ref: '#/definitions/entity.UserCommonInfo'
+    type: object
+  entity.UserCommonInfo:
+    properties:
+      birthday:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      role:
+        $ref: '#/definitions/entity.UserRole'
+    required:
+    - email
+    - name
+    type: object
+  entity.UserCred:
+    properties:
+      login:
+        type: string
+      password:
+        type: string
+    required:
+    - login
+    - password
+    type: object
+  entity.UserRole:
+    enum:
+    - admin
+    - service
+    - person
+    type: string
+    x-enum-varnames:
+    - Admin
+    - Service
+    - Person
+info:
+  contact:
+    email: kalinindima123@yandex.ru
+    name: Dima Kalinin
+    url: https://dimdimi4-and-fixiki.github.io/dima-portal/
+  description: Service for sending notifications to users
+  title: Notifier API
+  version: 0.0.1
+paths:
+  /admin/get_user/:
+    post:
+      consumes:
+      - application/json
+      description: Return user by user id or user login
+      parameters:
+      - description: no_comm
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/entity.GetUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.HttpResp-entity_UserCommonInfo'
+      summary: get user info
+      tags:
+      - Admin
+  /admin/register_user/:
+    post:
+      consumes:
+      - application/json
+      description: Register new user with user details
+      parameters:
+      - description: User details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/entity.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.HttpResp-entity_UserCommonInfo'
+      summary: Register new user
+      tags:
+      - Admin
+swagger: "2.0"

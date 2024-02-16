@@ -30,8 +30,6 @@ func (h *Handler) WithRoutes() {
 	admin := h.router.Group("/admin")
 	{
 		admin.GET("/ping", h.Ping)
-		admin.POST("/register", h.RegisterUser)
-		admin.POST("/check", h.Check)
 		admin.POST("/get_user", h.getUser)
 		admin.POST("/register_user", h.RegisterUser)
 	}

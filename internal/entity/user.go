@@ -47,8 +47,9 @@ type UserCred struct {
 	Password string `json:"password" binding:"required"`
 }
 
+// HashedUserCred represents user credentials stored in DB
 type HashedUserCred struct {
-	Login          string `json:"login"`
+	Login          string `gorm:"unique" json:"login"`
 	HashedPassword string `json:"password"`
 }
 

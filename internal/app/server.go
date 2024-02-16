@@ -4,6 +4,7 @@ import (
 	"go.uber.org/zap"
 	"notify/internal/handler/http"
 	admin "notify/internal/handler/http/api/admin"
+	"notify/internal/handler/http/api/swagger"
 	v1 "notify/internal/handler/http/api/v1"
 )
 
@@ -20,6 +21,7 @@ func (a *App) StartHTTPServer() {
 
 	v1.NewHandler(a.c.GetUseCase(), a.logger, router.Router()).WithRoutes()
 	admin.NewHandler(a.c.GetUseCase(), a.logger, router.Router()).WithRoutes()
+	swagger.NewHandler(a.logger, router.Router()).InitDocs()
 
 	err = a.server.Start()
 	if err != nil {

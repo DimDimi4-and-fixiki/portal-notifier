@@ -1,0 +1,174 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Service for sending notifications to users",
+        "title": "Notifier API",
+        "contact": {
+            "name": "Dima Kalinin",
+            "url": "https://dimdimi4-and-fixiki.github.io/dima-portal/",
+            "email": "kalinindima123@yandex.ru"
+        },
+        "version": "0.0.1"
+    },
+    "basePath": "/",
+    "paths": {
+        "/admin/get_user/": {
+            "post": {
+                "description": "Return user by user id or user login",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "get user info",
+                "parameters": [
+                    {
+                        "description": "no_comm",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.GetUserInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.HttpResp-entity_UserCommonInfo"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/register_user/": {
+            "post": {
+                "description": "Register new user with user details",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Register new user",
+                "parameters": [
+                    {
+                        "description": "User details",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.HttpResp-entity_UserCommonInfo"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "entity.GetUserInput": {
+            "type": "object",
+            "properties": {
+                "user_id": {
+                    "type": "string"
+                },
+                "user_login": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.HttpResp-entity_UserCommonInfo": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "meta": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/entity.UserCommonInfo"
+                }
+            }
+        },
+        "entity.User": {
+            "type": "object",
+            "properties": {
+                "cred": {
+                    "$ref": "#/definitions/entity.UserCred"
+                },
+                "info": {
+                    "$ref": "#/definitions/entity.UserCommonInfo"
+                }
+            }
+        },
+        "entity.UserCommonInfo": {
+            "type": "object",
+            "required": [
+                "email",
+                "name"
+            ],
+            "properties": {
+                "birthday": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "role": {
+                    "$ref": "#/definitions/entity.UserRole"
+                }
+            }
+        },
+        "entity.UserCred": {
+            "type": "object",
+            "required": [
+                "login",
+                "password"
+            ],
+            "properties": {
+                "login": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.UserRole": {
+            "type": "string",
+            "enum": [
+                "admin",
+                "service",
+                "person"
+            ],
+            "x-enum-varnames": [
+                "Admin",
+                "Service",
+                "Person"
+            ]
+        }
+    }
+}
