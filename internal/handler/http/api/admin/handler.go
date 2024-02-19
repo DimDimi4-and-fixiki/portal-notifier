@@ -27,7 +27,7 @@ func NewHandler(uc UseCase, logs logger.Logger, router *gin.Engine) *Handler {
 
 // WithRoutes Adds admin namespace routes to gin HTTP Router
 func (h *Handler) WithRoutes() {
-	admin := h.router.Group("/admin")
+	admin := h.router.Group("/api/admin")
 	{
 		admin.GET("/ping", h.Ping)
 		admin.POST("/get_user", h.getUser)

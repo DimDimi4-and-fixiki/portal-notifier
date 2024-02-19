@@ -12,19 +12,19 @@ import (
 )
 
 type Container struct {
-	pg         *gorm.DB
-	httpServer *graceful.Server
-
-	deps map[string]interface{}
+	pg            *gorm.DB
+	httpServer    *graceful.Server
+	courierClient ICourierClient
+	deps          map[string]interface{}
 }
 
-func NewContainer(pg *gorm.DB, httpServer *graceful.Server) *Container {
+func NewContainer(pg *gorm.DB, httpServer *graceful.Server, courierClient ICourierClient) *Container {
 
 	return &Container{
-		pg:         pg,
-		httpServer: httpServer,
-
-		deps: make(map[string]interface{}),
+		pg:            pg,
+		httpServer:    httpServer,
+		courierClient: courierClient,
+		deps:          make(map[string]interface{}),
 	}
 }
 
@@ -37,6 +37,10 @@ func (c *Container) getPg() *gorm.DB {
 	return c.pg
 }
 
+func (c *Container) getCourier() ICourierClient {
+	return c.courierClient
+}
+
 func (c *Container) getAuthService() *authservice.Service {
 
 	return authservice.NewService(c.getUserRepo())
@@ -44,7 +48,7 @@ func (c *Container) getAuthService() *authservice.Service {
 
 func (c *Container) getNotifyService() *notifyservice.Service {
 
-	return notifyservice.NewService(c.getUserRepo(), c.getProposalRepo())
+	return notifyservice.NewService(c.getUserRepo(), c.getProposalRepo(), c.getCourier())
 }
 
 func (c *Container) getUserRepo() *userrepo.Repository {

@@ -47,7 +47,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/entity.HttpResp-entity_UserCommonInfo"
+                            "$ref": "#/definitions/http.Resp-entity_UserCommonInfo"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http.RespErr"
                         }
                     }
                 }
@@ -81,7 +87,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/entity.HttpResp-entity_UserCommonInfo"
+                            "$ref": "#/definitions/http.Resp-entity_UserCommonInfo"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http.RespErr"
                         }
                     }
                 }
@@ -97,23 +109,6 @@ const docTemplate = `{
                 },
                 "user_login": {
                     "type": "string"
-                }
-            }
-        },
-        "entity.HttpResp-entity_UserCommonInfo": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "meta": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/entity.UserCommonInfo"
                 }
             }
         },
@@ -176,6 +171,42 @@ const docTemplate = `{
                 "Service",
                 "Person"
             ]
+        },
+        "http.ErrForResp": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "http.Resp-entity_UserCommonInfo": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "meta": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/entity.UserCommonInfo"
+                }
+            }
+        },
+        "http.RespErr": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "$ref": "#/definitions/http.ErrForResp"
+                },
+                "meta": {
+                    "type": "string"
+                }
+            }
         }
     }
 }`
@@ -184,7 +215,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "0.0.1",
 	Host:             "",
-	BasePath:         "/",
+	BasePath:         "/api/",
 	Schemes:          []string{},
 	Title:            "Notifier API",
 	Description:      "Service for sending notifications to users",

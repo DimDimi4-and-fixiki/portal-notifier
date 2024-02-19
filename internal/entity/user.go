@@ -25,6 +25,14 @@ type UserDB struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
+func (u UserDB) Name() string {
+	return u.Info.Name
+}
+
+func (u UserDB) Login() string {
+	return u.Cred.Login
+}
+
 func (UserDB) TableName() string {
 	return "users"
 }
@@ -47,7 +55,7 @@ type UserCred struct {
 	Password string `json:"password" binding:"required"`
 }
 
-// HashedUserCred represents user credentials stored in DB
+// HashedUserCred represents User credentials stored in DB
 type HashedUserCred struct {
 	Login          string `gorm:"unique" json:"login"`
 	HashedPassword string `json:"password"`

@@ -23,5 +23,5 @@ func Hash(text string) (string, error) {
 func VerifyPassword(plain string, hashed string) bool {
 	bplain, bhashed := []byte(plain), []byte(hashed)
 	err := bcrypt.CompareHashAndPassword(bhashed, bplain)
-	return err != nil
+	return err == nil
 }

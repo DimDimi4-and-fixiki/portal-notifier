@@ -1,11 +1,14 @@
 package app
 
 import (
+	"context"
 	"errors"
+	courierc "github.com/trycourier/courier-go/v3"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/tylerb/graceful.v1"
 	"gorm.io/gorm"
 	"notify/internal/config"
+	e "notify/internal/entity"
 	"notify/internal/handler/http"
 	"sync"
 )
@@ -23,14 +26,19 @@ type IHttpServer interface {
 	RegisterRoutes(r *http.Router)
 }
 
+type ICourierClient interface {
+	SendTextMessage(context.Context, e.EmailMsg) (*courierc.SendMessageResponse, error)
+}
+
 type App struct {
 	cfg config.Config
 
 	c     *Container
 	cOnce *sync.Once
 
-	pg     *gorm.DB
-	server IHttpServer
+	pg            *gorm.DB
+	server        IHttpServer
+	courierClient ICourierClient
 
 	logger Logger
 }
@@ -63,7 +71,9 @@ func NewApp() (*App, error) {
 
 	app.pg = pgConn
 	app.server = app.newGracefulServer()
-	app.c = NewContainer(app.pg, app.server.GetGracefulServer())
+	app.courierClient = app.newCourierClient(cfg.Courier)
+
+	app.c = NewContainer(app.pg, app.server.GetGracefulServer(), app.courierClient)
 
 	return app, nil
 }

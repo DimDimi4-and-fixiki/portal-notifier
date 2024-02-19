@@ -21,7 +21,7 @@ func (a *App) StartHTTPServer() {
 
 	v1.NewHandler(a.c.GetUseCase(), a.logger, router.Router()).WithRoutes()
 	admin.NewHandler(a.c.GetUseCase(), a.logger, router.Router()).WithRoutes()
-	swagger.NewHandler(a.logger, router.Router()).InitDocs()
+	swagger.NewSwagger(a.logger, router.Router()).InitDocs()
 
 	err = a.server.Start()
 	if err != nil {

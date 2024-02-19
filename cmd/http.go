@@ -6,7 +6,7 @@ import (
 	"notify/internal/app"
 )
 
-// @BasePath /
+// @BasePath /api/
 // @title Notifier API
 // @version 0.0.1
 // @Description Service for sending notifications to users

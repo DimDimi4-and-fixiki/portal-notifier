@@ -6,7 +6,8 @@ import (
 )
 
 func GetPgErr(err error) *pgconn.PgError {
-	if pgError := err.(*pgconn.PgError); errors.Is(err, pgError) {
+	var pgError *pgconn.PgError
+	if errors.As(err, &pgError) {
 		return pgError
 	}
 	return nil

@@ -9,9 +9,10 @@ import (
 )
 
 type Config struct {
-	Server HttpServerConfig
-	Db     DbConfig
-	Crypt  CryptConfig
+	Server  HttpServerConfig
+	Db      DbConfig
+	Crypt   CryptConfig
+	Courier CourierConfig
 }
 
 var JwtSigningMethod = jwt.SigningMethodES256

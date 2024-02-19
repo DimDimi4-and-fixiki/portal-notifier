@@ -6,6 +6,7 @@ import (
 	"go.uber.org/zap"
 	"net/http"
 	e "notify/internal/entity"
+	http_ "notify/internal/handler/http"
 )
 
 // RegisterUser godoc
@@ -15,14 +16,15 @@ import (
 // @Accept application/json
 // @Produce application/json
 // @Param user body e.User true "User details"
-// @Success 200 {object} e.HttpResp[e.UserCommonInfo]
+// @Success 200 {object} http_.Resp[e.UserCommonInfo]
+// @Failure 400 {object} http_.RespErr
 // @Router /admin/register_user/ [post]
 func (h *Handler) RegisterUser(c *gin.Context) {
 	var request e.User
 	err := c.BindJSON(&request)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{"error": err.Error()})
-		h.logger.Info("invalid request:", zap.Error(err))
+		c.JSON(http.StatusBadRequest, http_.RespValidationErr(err))
+		h.logger.Info("request validation error", zap.Error(err))
 		return
 	}
 
@@ -31,6 +33,6 @@ func (h *Handler) RegisterUser(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"error": err.Error()})
 		return
 	}
-	resp := e.HttpResp[e.UserCommonInfo]{Message: "Success", Result: user.Info}
+	resp := http_.Resp[e.UserCommonInfo]{Message: "Success", Result: user.Info}
 	c.JSON(http.StatusOK, resp)
 }

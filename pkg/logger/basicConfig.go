@@ -12,7 +12,7 @@ func basicConfig() zap.Config {
 	encoderCfg.EncodeTime = zapcore.ISO8601TimeEncoder
 	return zap.Config{
 		Level:             zap.NewAtomicLevelAt(zap.InfoLevel),
-		Development:       false,
+		Development:       true,
 		DisableCaller:     false,
 		DisableStacktrace: false,
 		Sampling:          nil,

@@ -25,7 +25,7 @@ func NewHandler(uc UseCase, logs logger.Logger, router *gin.Engine) *Handler {
 
 // WithRoutes Adds v1 namespace routes to gin HTTP Router
 func (h *Handler) WithRoutes() {
-	v1 := h.router.Group("/v1")
+	v1 := h.router.Group("/api/v1")
 	{
 		v1.GET("/ping", h.Ping)
 	}

@@ -12,11 +12,12 @@ type Handler struct {
 	router *gin.Engine
 }
 
-func NewHandler(logs logger.Logger, router *gin.Engine) *Handler {
+// NewSwagger creates new handler for swagger docs
+func NewSwagger(logs logger.Logger, router *gin.Engine) *Handler {
 	return &Handler{logger: logs, router: router}
 }
 
-// InitDocs binds route for swagger docs
+// InitDocs binds route for displaying swagger docs to handler
 func (h *Handler) InitDocs() {
 	docsGroup := h.router.Group("/docs")
 	{
