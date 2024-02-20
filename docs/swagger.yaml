@@ -1,10 +1,32 @@
 basePath: /api/
 definitions:
-  entity.GetUserInput:
+  entity.GetUserReq:
     properties:
       user_id:
         type: string
       user_login:
+        type: string
+    type: object
+  entity.SendProposalReq:
+    properties:
+      description:
+        type: string
+      reason:
+        type: string
+      title:
+        type: string
+      user_id:
+        type: string
+    type: object
+  entity.SendProposalResp:
+    properties:
+      proposal_description:
+        type: string
+      proposal_id:
+        type: string
+      proposal_reason:
+        type: string
+      proposal_title:
         type: string
     type: object
   entity.User:
@@ -55,6 +77,15 @@ definitions:
       message:
         type: string
     type: object
+  http.Resp-entity_SendProposalResp:
+    properties:
+      message:
+        type: string
+      meta:
+        type: string
+      result:
+        $ref: '#/definitions/entity.SendProposalResp'
+    type: object
   http.Resp-entity_UserCommonInfo:
     properties:
       message:
@@ -91,14 +122,14 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/entity.GetUserInput'
+          $ref: '#/definitions/entity.GetUserReq'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/http.Resp-entity_UserCommonInfo'
+            $ref: '#/definitions/http.RespErr'
         "400":
           description: Bad Request
           schema:
@@ -132,4 +163,31 @@ paths:
       summary: Register new user
       tags:
       - Admin
+  /v1/send_proposal/:
+    post:
+      consumes:
+      - application/json
+      description: Sends message via email to owner of project and confirmation to
+        user's email
+      parameters:
+      - description: no_comm
+        in: body
+        name: proposal
+        required: true
+        schema:
+          $ref: '#/definitions/entity.SendProposalReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.RespErr'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.RespErr'
+      summary: send proposal notification by email
+      tags:
+      - v1
 swagger: "2.0"

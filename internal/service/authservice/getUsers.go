@@ -11,8 +11,8 @@ func (s *Service) GetAllUsers(ctx context.Context) (*[]e.UserDB, error) {
 }
 
 // GetUser returns user from DB by login or by user_id
-func (s *Service) GetUser(ctx context.Context, data e.GetUserInput) (*e.UserDB, error) {
-	if data == (e.GetUserInput{}) {
+func (s *Service) GetUser(ctx context.Context, data e.GetUserReq) (*e.UserDB, error) {
+	if data == (e.GetUserReq{}) {
 		return nil, ErrEmptyUserInput
 	}
 

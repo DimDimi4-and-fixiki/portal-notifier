@@ -23,3 +23,11 @@ func ValidationError(err error) Err {
 		err:  fmt.Errorf("%w: %w", ErrValidation, err),
 	}
 }
+
+func InternalError(err error) Err {
+	var ErrInternal = errors.New("internal error")
+	return Err{
+		code: "5000",
+		err:  fmt.Errorf("%w: %w", ErrInternal, err),
+	}
+}

@@ -12,7 +12,7 @@ type UseCase interface {
 	GetAllUsers(ctx context.Context) (*[]e.UserDB, error)
 	UpdateUserInfo(ctx context.Context, id uuid.UUID, data e.UserCommonInfo) (e.UserDB, error)
 	CreateUser(ctx context.Context, user *e.User) (e.UserDB, error)
-	GetUser(ctx context.Context, data e.GetUserInput) (e.UserDB, error)
+	GetUser(ctx context.Context, data e.GetUserReq) (e.UserDB, error)
 }
 
 type Handler struct {

@@ -11,11 +11,13 @@ type authService interface {
 	UpdateUserInfo(ctx context.Context, id uuid.UUID, data e.UserCommonInfo) (e.UserDB, error)
 	Verify(ctx context.Context, u *e.User) (bool, error)
 	GetAllUsers(ctx context.Context) (*[]e.UserDB, error)
-	GetUser(ctx context.Context, data e.GetUserInput) (*e.UserDB, error)
+	GetUser(ctx context.Context, data e.GetUserReq) (*e.UserDB, error)
 }
 
 type notifyService interface {
-	// TODO: define interface to inject a service
+	SendProposalToOwner(ctx context.Context, proposal *e.ProjectProposal, ownerEmail string) error
+	SendProposalToUser(ctx context.Context, proposal *e.ProjectProposal, userEmail string) error
+	SaveProposal(ctx context.Context, proposal *e.ProjectProposal) error
 }
 
 type UseCase struct {

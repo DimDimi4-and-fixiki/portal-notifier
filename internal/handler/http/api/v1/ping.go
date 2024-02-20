@@ -4,6 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (h *Handler) Ping(ctx *gin.Context) {
+func (h *Handler) ping(ctx *gin.Context) {
 	ctx.String(200, "Pong")
 }

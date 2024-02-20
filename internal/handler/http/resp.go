@@ -35,7 +35,11 @@ func RespFromErr(err Err) RespErr {
 }
 
 func RespValidationErr(err error) RespErr {
-	vError := ValidationError(err)
-	return RespFromErr(vError)
+	e := ValidationError(err)
+	return RespFromErr(e)
+}
 
+func RespInternalErr(err error) RespErr {
+	e := InternalError(err)
+	return RespFromErr(e)
 }

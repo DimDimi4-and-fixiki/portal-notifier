@@ -39,7 +39,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.GetUserInput"
+                            "$ref": "#/definitions/entity.GetUserReq"
                         }
                     }
                 ],
@@ -47,7 +47,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/http.Resp-entity_UserCommonInfo"
+                            "$ref": "#/definitions/http.RespErr"
                         }
                     },
                     "400": {
@@ -98,16 +98,90 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/v1/send_proposal/": {
+            "post": {
+                "description": "Sends message via email to owner of project and confirmation to user's email",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "v1"
+                ],
+                "summary": "send proposal notification by email",
+                "parameters": [
+                    {
+                        "description": "no_comm",
+                        "name": "proposal",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.SendProposalReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.RespErr"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http.RespErr"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
-        "entity.GetUserInput": {
+        "entity.GetUserReq": {
             "type": "object",
             "properties": {
                 "user_id": {
                     "type": "string"
                 },
                 "user_login": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.SendProposalReq": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "reason": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.SendProposalResp": {
+            "type": "object",
+            "properties": {
+                "proposal_description": {
+                    "type": "string"
+                },
+                "proposal_id": {
+                    "type": "string"
+                },
+                "proposal_reason": {
+                    "type": "string"
+                },
+                "proposal_title": {
                     "type": "string"
                 }
             }
@@ -180,6 +254,20 @@ const docTemplate = `{
                 },
                 "message": {
                     "type": "string"
+                }
+            }
+        },
+        "http.Resp-entity_SendProposalResp": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "meta": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/entity.SendProposalResp"
                 }
             }
         },

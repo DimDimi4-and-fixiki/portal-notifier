@@ -19,7 +19,7 @@ const (
 type UserDB struct {
 	ID        uuid.UUID      `gorm:"type:uuid;default:uuid_generate_v4();primary_key"`
 	Info      UserCommonInfo `gorm:"embedded" json:"info"`
-	Cred      HashedUserCred `gorm:"embedded" json:"req"`
+	Cred      HashedUserCred `gorm:"embedded" json:"httpReq"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
@@ -61,7 +61,7 @@ type HashedUserCred struct {
 	HashedPassword string `json:"password"`
 }
 
-type GetUserInput struct {
+type GetUserReq struct {
 	ID    uuid.UUID `json:"user_id"`
 	Login string    `json:"user_login"`
 }

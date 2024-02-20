@@ -19,7 +19,7 @@ func (a *App) StartHTTPServer() {
 		a.logger.Fatal("Fail to start http server:", zap.Error(err))
 	}
 
-	v1.NewHandler(a.c.GetUseCase(), a.logger, router.Router()).WithRoutes()
+	v1.NewHandler(a.c.GetUseCase(), a.logger, router.Router(), &a.cfg).WithRoutes()
 	admin.NewHandler(a.c.GetUseCase(), a.logger, router.Router()).WithRoutes()
 	swagger.NewSwagger(a.logger, router.Router()).InitDocs()
 
