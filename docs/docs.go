@@ -59,6 +59,46 @@ const docTemplate = `{
                 }
             }
         },
+        "/admin/register_service/": {
+            "post": {
+                "description": "Register new user with user details",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Register new service",
+                "parameters": [
+                    {
+                        "description": "Service details",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.CreateServiceReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.Resp-entity_ServiceUser"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http.RespErr"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/register_user/": {
             "post": {
                 "description": "Register new user with user details",
@@ -98,9 +138,117 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/v1/decode_jwt/": {
+            "post": {
+                "description": "Decode JWT token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "v1"
+                ],
+                "summary": "View what's inside your JWT token",
+                "parameters": [
+                    {
+                        "description": "JWT token",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.Resp-v1_respDecodeJWT"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http.RespErr"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/register_user/": {
+            "post": {
+                "description": "Register new user with user details",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "v1"
+                ],
+                "summary": "Register new user with role person",
+                "parameters": [
+                    {
+                        "description": "Auth data and User details",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.ReqWithAuth-entity_User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.Resp-v1_resp"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http.RespErr"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/http.RespErr"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "entity.AuthData": {
+            "type": "object",
+            "properties": {
+                "login": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.CreateServiceReq": {
+            "type": "object",
+            "properties": {
+                "login": {
+                    "type": "string"
+                },
+                "service_name": {
+                    "type": "string"
+                }
+            }
+        },
         "entity.GetUserInput": {
             "type": "object",
             "properties": {
@@ -108,6 +256,61 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "user_login": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.JWTString": {
+            "type": "object",
+            "properties": {
+                "expires_at": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.ReqWithAuth-entity_User": {
+            "type": "object",
+            "properties": {
+                "auth": {
+                    "$ref": "#/definitions/entity.AuthData"
+                },
+                "data": {
+                    "$ref": "#/definitions/entity.User"
+                }
+            }
+        },
+        "entity.ServiceCred": {
+            "type": "object",
+            "properties": {
+                "api_key": {
+                    "type": "string"
+                },
+                "login": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.ServiceUser": {
+            "type": "object",
+            "properties": {
+                "common_info": {
+                    "$ref": "#/definitions/entity.ServiceUserCommonInfo"
+                },
+                "cred": {
+                    "$ref": "#/definitions/entity.ServiceCred"
+                }
+            }
+        },
+        "entity.ServiceUserCommonInfo": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
                     "type": "string"
                 }
             }
@@ -126,7 +329,6 @@ const docTemplate = `{
         "entity.UserCommonInfo": {
             "type": "object",
             "required": [
-                "email",
                 "name"
             ],
             "properties": {
@@ -183,6 +385,20 @@ const docTemplate = `{
                 }
             }
         },
+        "http.Resp-entity_ServiceUser": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "meta": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/entity.ServiceUser"
+                }
+            }
+        },
         "http.Resp-entity_UserCommonInfo": {
             "type": "object",
             "properties": {
@@ -197,6 +413,34 @@ const docTemplate = `{
                 }
             }
         },
+        "http.Resp-v1_resp": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "meta": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/v1.resp"
+                }
+            }
+        },
+        "http.Resp-v1_respDecodeJWT": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "meta": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/v1.respDecodeJWT"
+                }
+            }
+        },
         "http.RespErr": {
             "type": "object",
             "properties": {
@@ -205,6 +449,36 @@ const docTemplate = `{
                 },
                 "meta": {
                     "type": "string"
+                }
+            }
+        },
+        "v1.req": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.resp": {
+            "type": "object",
+            "properties": {
+                "jwt": {
+                    "$ref": "#/definitions/entity.JWTString"
+                },
+                "user": {
+                    "$ref": "#/definitions/entity.UserCommonInfo"
+                }
+            }
+        },
+        "v1.respDecodeJWT": {
+            "type": "object",
+            "properties": {
+                "user_login": {
+                    "type": "string"
+                },
+                "user_role": {
+                    "$ref": "#/definitions/entity.UserRole"
                 }
             }
         }

@@ -6,4 +6,5 @@ type DbConfig struct {
 	Password string `env:"DB_PASSWORD" env-default:"notify"`
 	Name     string `env:"DB_NAME" env-default:"notify"`
 	User     string `env:"DB_USER" env-default:"notify"`
+	LogSql   bool   `env:"DB_LOG_SQL" env-default:"false"`
 }

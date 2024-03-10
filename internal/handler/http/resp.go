@@ -37,5 +37,14 @@ func RespFromErr(err Err) RespErr {
 func RespValidationErr(err error) RespErr {
 	vError := ValidationError(err)
 	return RespFromErr(vError)
+}
 
+func RespAuthErr(err error) RespErr {
+	e := AuthError(err)
+	return RespFromErr(e)
+}
+
+func RespUnauthorizedErr() RespErr {
+	e := UnauthorizedError()
+	return RespFromErr(e)
 }

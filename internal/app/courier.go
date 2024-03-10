@@ -1,8 +1,8 @@
 package app
 
 import (
-	"notify/internal/clients/courier"
 	"notify/internal/config"
+	"notify/internal/repo/clients/courier"
 )
 
 func (a *App) newCourierClient(cfg config.CourierConfig) *courier.Client {

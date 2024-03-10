@@ -16,10 +16,15 @@ func (s *Service) GetUser(ctx context.Context, data e.GetUserInput) (*e.UserDB, 
 		return nil, ErrEmptyUserInput
 	}
 
-	if data.ID != (uuid.UUID{}) {
-		return s.userRepo.GetByID(ctx, data.ID)
+	if data.Login != "" {
+		return s.userRepo.GetByLogin(ctx, data.Login)
 	}
-	return s.userRepo.GetByLogin(ctx, data.Login)
+
+	uid, err := uuid.Parse(data.ID)
+	if err != nil {
+		return nil, err
+	}
+	return s.userRepo.GetByID(ctx, uid)
 
 }
 

@@ -37,15 +37,29 @@ func (UserDB) TableName() string {
 	return "users"
 }
 
-// User contains unhashed data to pass through the app
+// User contains non-hashed data to pass through the app
 type User struct {
 	Info UserCommonInfo `json:"info"`
 	Cred UserCred       `json:"cred"`
 }
 
+type ServiceUser struct {
+	Info ServiceUserCommonInfo `json:"common_info"`
+	Cred ServiceCred           `json:"cred"`
+}
+
+type ServiceUserCommonInfo struct {
+	Name string `gorm:"default:null" json:"name" binding:"required"`
+}
+
+type ServiceCred struct {
+	ApiKey string `json:"api_key"`
+	Login  string `json:"login"`
+}
+
 type UserCommonInfo struct {
 	Name     string    `gorm:"default:null" json:"name" binding:"required"`
-	Email    string    `gorm:"default:null" json:"email" binding:"required,email"`
+	Email    string    `gorm:"default:null" json:"email" binding:"email"`
 	Birthday time.Time `gorm:"default:null" json:"birthday"`
 	Role     UserRole  `gorm:"default:person" json:"role"`
 }
@@ -62,6 +76,6 @@ type HashedUserCred struct {
 }
 
 type GetUserInput struct {
-	ID    uuid.UUID `json:"user_id"`
-	Login string    `json:"user_login"`
+	ID    string `json:"user_id"`
+	Login string `json:"user_login"`
 }

@@ -5,16 +5,22 @@ import (
 	"time"
 )
 
-type JWT struct {
+// UserJWT data to be encoded in jwt token
+type UserJWT struct {
 	UserLogin string   `json:"user_login"`
 	UserRole  UserRole `json:"user_role"`
 	jwt.RegisteredClaims
 }
 
-func JWTFromUserDB(user UserDB, expireMinutes uint) *JWT {
+type JWTString struct {
+	Token     string    `json:"token"`
+	ExpiresAt time.Time `json:"expires_at"`
+}
+
+func JWTFromUserDB(user UserDB, expireMinutes uint) *UserJWT {
 	minutes := time.Duration(expireMinutes)
 	expirationTime := time.Now().Add(minutes * time.Minute)
-	data := &JWT{
+	data := &UserJWT{
 		UserLogin: user.Cred.Login,
 		UserRole:  user.Info.Role,
 		RegisteredClaims: jwt.RegisteredClaims{

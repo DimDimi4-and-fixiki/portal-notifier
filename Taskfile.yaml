@@ -1,6 +1,11 @@
 version: '3'
 
 tasks:
+  set-up:
+    cmds:
+      - brew install pre-commit
+      - GOPROXY=https://proxy.golang.org,direct go get
+      - GOPROXY=https://proxy.golang.org,direct go install github.com/swaggo/swag/cmd/swag@latest
   coverage:
     cmds:
       - go test -short -count=1 -race -coverprofile=coverage.out ./...
@@ -14,7 +19,18 @@ tasks:
     cmd: go test -v --parallel 8 -race -count=20 ./...
   swag-gen:
     cmd: swag init -g ./cmd/http.go -o docs/
-  run-http:
+  run-local:
+    cmds:
+      - docker-compose -f docker-compose.local.yml up -d
+      - sleep 7
+      - swag init -g ./cmd/http.go -o docs/
+      - go run main.go http
+  http-local:
     cmds:
       - swag init -g ./cmd/http.go -o docs/
       - go run main.go http
+  db-local:
+    cmd: docker-compose -f docker-compose.local.yml up postgres
+  download:
+    cmds:
+      - GOPROXY=https://proxy.golang.org,direct go get

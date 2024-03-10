@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/jackc/pgx/v5/pgconn"
 	e "notify/internal/entity"
-	"notify/internal/repository/pgrepo"
+	"notify/internal/repo/pgrepo"
 	"notify/pkg/logger"
 	"notify/pkg/pgerr"
 )

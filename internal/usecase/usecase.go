@@ -12,6 +12,9 @@ type authService interface {
 	Verify(ctx context.Context, u *e.User) (bool, error)
 	GetAllUsers(ctx context.Context) (*[]e.UserDB, error)
 	GetUser(ctx context.Context, data e.GetUserInput) (*e.UserDB, error)
+	JWTFromUser(context.Context, *e.UserDB) (*e.JWTString, error)
+	DecodeJWTToUser(context.Context, string) (*e.UserJWT, error)
+	JWTFromLogin(ctx context.Context, login string) (*e.JWTString, error)
 }
 
 type notifyService interface {

@@ -23,3 +23,18 @@ func ValidationError(err error) Err {
 		err:  fmt.Errorf("%w: %w", ErrValidation, err),
 	}
 }
+
+func AuthError(err error) Err {
+	var ErrAuth = errors.New("error while authentication")
+	return Err{
+		code: "5000",
+		err:  fmt.Errorf("%w %w", ErrAuth, err),
+	}
+}
+
+func UnauthorizedError() Err {
+	return Err{
+		code: "3000",
+		err:  errors.New("unauthorized error, wrong credentials"),
+	}
+}

@@ -1,11 +1,60 @@
 basePath: /api/
 definitions:
+  entity.AuthData:
+    properties:
+      login:
+        type: string
+      password:
+        type: string
+    type: object
+  entity.CreateServiceReq:
+    properties:
+      login:
+        type: string
+      service_name:
+        type: string
+    type: object
   entity.GetUserInput:
     properties:
       user_id:
         type: string
       user_login:
         type: string
+    type: object
+  entity.JWTString:
+    properties:
+      expires_at:
+        type: string
+      token:
+        type: string
+    type: object
+  entity.ReqWithAuth-entity_User:
+    properties:
+      auth:
+        $ref: '#/definitions/entity.AuthData'
+      data:
+        $ref: '#/definitions/entity.User'
+    type: object
+  entity.ServiceCred:
+    properties:
+      api_key:
+        type: string
+      login:
+        type: string
+    type: object
+  entity.ServiceUser:
+    properties:
+      common_info:
+        $ref: '#/definitions/entity.ServiceUserCommonInfo'
+      cred:
+        $ref: '#/definitions/entity.ServiceCred'
+    type: object
+  entity.ServiceUserCommonInfo:
+    properties:
+      name:
+        type: string
+    required:
+    - name
     type: object
   entity.User:
     properties:
@@ -25,7 +74,6 @@ definitions:
       role:
         $ref: '#/definitions/entity.UserRole'
     required:
-    - email
     - name
     type: object
   entity.UserCred:
@@ -55,6 +103,15 @@ definitions:
       message:
         type: string
     type: object
+  http.Resp-entity_ServiceUser:
+    properties:
+      message:
+        type: string
+      meta:
+        type: string
+      result:
+        $ref: '#/definitions/entity.ServiceUser'
+    type: object
   http.Resp-entity_UserCommonInfo:
     properties:
       message:
@@ -64,12 +121,49 @@ definitions:
       result:
         $ref: '#/definitions/entity.UserCommonInfo'
     type: object
+  http.Resp-v1_resp:
+    properties:
+      message:
+        type: string
+      meta:
+        type: string
+      result:
+        $ref: '#/definitions/v1.resp'
+    type: object
+  http.Resp-v1_respDecodeJWT:
+    properties:
+      message:
+        type: string
+      meta:
+        type: string
+      result:
+        $ref: '#/definitions/v1.respDecodeJWT'
+    type: object
   http.RespErr:
     properties:
       error:
         $ref: '#/definitions/http.ErrForResp'
       meta:
         type: string
+    type: object
+  v1.req:
+    properties:
+      token:
+        type: string
+    type: object
+  v1.resp:
+    properties:
+      jwt:
+        $ref: '#/definitions/entity.JWTString'
+      user:
+        $ref: '#/definitions/entity.UserCommonInfo'
+    type: object
+  v1.respDecodeJWT:
+    properties:
+      user_login:
+        type: string
+      user_role:
+        $ref: '#/definitions/entity.UserRole'
     type: object
 info:
   contact:
@@ -106,6 +200,32 @@ paths:
       summary: get user info
       tags:
       - Admin
+  /admin/register_service/:
+    post:
+      consumes:
+      - application/json
+      description: Register new user with user details
+      parameters:
+      - description: Service details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/entity.CreateServiceReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.Resp-entity_ServiceUser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.RespErr'
+      summary: Register new service
+      tags:
+      - Admin
   /admin/register_user/:
     post:
       consumes:
@@ -132,4 +252,60 @@ paths:
       summary: Register new user
       tags:
       - Admin
+  /v1/decode_jwt/:
+    post:
+      consumes:
+      - application/json
+      description: Decode JWT token
+      parameters:
+      - description: JWT token
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/v1.req'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.Resp-v1_respDecodeJWT'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.RespErr'
+      summary: View what's inside your JWT token
+      tags:
+      - v1
+  /v1/register_user/:
+    post:
+      consumes:
+      - application/json
+      description: Register new user with user details
+      parameters:
+      - description: Auth data and User details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/entity.ReqWithAuth-entity_User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.Resp-v1_resp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.RespErr'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/http.RespErr'
+      summary: Register new user with role person
+      tags:
+      - v1
 swagger: "2.0"
