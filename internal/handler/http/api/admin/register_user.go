@@ -30,7 +30,7 @@ func (h *Handler) RegisterUser(c *gin.Context) {
 
 	user, err := h.uc.CreateUser(context.Background(), &request)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	resp := http_.Resp[e.UserCommonInfo]{Message: "Success", Result: user.Info}

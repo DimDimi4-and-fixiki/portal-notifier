@@ -4,15 +4,14 @@ import (
 	"fmt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+	"log"
 	"notify/internal/config"
-	"notify/pkg/logger"
+	"os"
+	"time"
 )
 
 func pgDSN(cfg config.DbConfig) string {
-	logger.NewSugar().Info(fmt.Sprintf(
-		"host=%s user=%s password=%s port=%s dbname=%s sslmode=disable TimeZone=Europe/Moscow",
-		cfg.Host, cfg.User, cfg.Password, cfg.Port, cfg.Name,
-	))
 	return fmt.Sprintf(
 		"host=%s user=%s password=%s port=%s dbname=%s sslmode=disable TimeZone=Europe/Moscow",
 		cfg.Host, cfg.User, cfg.Password, cfg.Port, cfg.Name,
@@ -24,7 +23,22 @@ func pgConfig(cfg config.DbConfig) postgres.Config {
 }
 
 func (a *App) newPgConnect(cfg config.DbConfig) (*gorm.DB, error) {
-	db, err := gorm.Open(postgres.New(pgConfig(cfg)), &gorm.Config{})
+	gormCfg := gorm.Config{}
+	if cfg.LogSql {
+		newLogger := logger.New(
+			log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
+			logger.Config{
+				SlowThreshold:             0 * time.Second, // Slow SQL threshold
+				LogLevel:                  logger.Info,     // Log level
+				IgnoreRecordNotFoundError: false,           // Ignore ErrRecordNotFound error for logger
+				ParameterizedQueries:      true,            // Don't include params in the SQL log
+				Colorful:                  true,            // Disable color
+			},
+		)
+		gormCfg.Logger = newLogger
+	}
+
+	db, err := gorm.Open(postgres.New(pgConfig(cfg)), &gormCfg)
 	return db, err
 }
 

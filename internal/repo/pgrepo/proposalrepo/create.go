@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	e "notify/internal/entity"
-	"notify/internal/repository/pgrepo"
+	"notify/internal/repo/pgrepo"
 	"notify/pkg/pgerr"
 )
 

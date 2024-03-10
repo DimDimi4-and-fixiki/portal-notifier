@@ -13,6 +13,7 @@ type UseCase interface {
 	UpdateUserInfo(ctx context.Context, id uuid.UUID, data e.UserCommonInfo) (e.UserDB, error)
 	CreateUser(ctx context.Context, user *e.User) (e.UserDB, error)
 	GetUser(ctx context.Context, data e.GetUserInput) (e.UserDB, error)
+	CreateService(ctx context.Context, user *e.User) (e.ServiceUser, error)
 }
 
 type Handler struct {
@@ -32,5 +33,6 @@ func (h *Handler) WithRoutes() {
 		admin.GET("/ping", h.Ping)
 		admin.POST("/get_user", h.getUser)
 		admin.POST("/register_user", h.RegisterUser)
+		admin.POST("/register_service", h.RegisterService)
 	}
 }
