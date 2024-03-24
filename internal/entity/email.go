@@ -20,7 +20,7 @@ func (e *EmailMsg) FromProposalForOwner(proposal *ProjectProposal, toEmail strin
 }
 
 func (e *EmailMsg) FromProposalForUser(proposal *ProjectProposal, toEmail string) EmailMsg {
-	e.Title = "Meow from Dima :)"
+	e.Title = "Meow from Dima 🐱"
 	e.Text = proposal.EmailMessageForUser()
 	e.ToEmail = toEmail
 	return *e

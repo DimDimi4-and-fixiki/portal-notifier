@@ -7,9 +7,9 @@ COPY ./ /app
 WORKDIR /app
 
 RUN go mod download && go get ./...
-RUN CGO_ENABLED=0 GOOS=linux go build -o ./.bin/app ./cmd/http.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o ./.bin/app ./main.go
 RUN chmod +x ./.bin/app
-  
+
 #lightweight docker container with binary
 FROM alpine:3.19.0
 
@@ -21,4 +21,4 @@ COPY --from=0 /app/.env .
 
 EXPOSE 8080
 
-CMD [ "./app"]
+CMD [ "./app", "http"]

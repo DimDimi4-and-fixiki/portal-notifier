@@ -23,4 +23,5 @@
 go.work
 
 # Creds for local dev
+/creds/.api_key
 /creds/
