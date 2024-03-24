@@ -122,5 +122,5 @@ jobs:
             docker-compose down
 
             # Run a new container from a new image
-            docker-compose up \
+            docker-compose up -d \
             --force-recreate --build
