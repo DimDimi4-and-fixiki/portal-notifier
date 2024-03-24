@@ -124,7 +124,9 @@ jobs:
             cd docker_compose
             # Stop all
             docker-compose down
-
+          
+            # Remove images
+            docker image rm dimakalinin/dima-portal-api -f
+            
             # Run a new container from a new image
-            docker-compose up -d \
-            --force-recreate --build
+            docker-compose up -d --build
