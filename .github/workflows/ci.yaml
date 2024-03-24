@@ -101,14 +101,15 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: Copy docker-compose on VDS
-        uses: appleboy/scp-action@v0.1.7
+      - name: Copy docker-compose via ssh
+        uses: garygrossgarten/github-action-scp@v0.8.0
         with:
-          host: ${{ secrets.SSH_HOST }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          local: ci/docker-compose.yaml
+          remote: /root/docker_compose/docker-compose.yaml
+          host: ${{ secrets.HOST }}
           username: ${{ secrets.SSH_USER }}
-          source: "ci/docker-compose.yaml"
-          target: /root/docker_compose
+          privateKey: ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: Deploy app to VDS
         uses: appleboy/ssh-action@v1.0.3
         with:
