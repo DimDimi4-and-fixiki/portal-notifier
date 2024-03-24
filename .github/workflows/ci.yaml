@@ -106,13 +106,13 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           script: |
             # Stop running container
-            docker stop $(echo $CONTAINER_NAME)
+            docker stop dima-portal-api
 
             # Remove old container
-            docker rm $(echo $CONTAINER_NAME)
+            docker rm dima-portal-api
 
             # Run a new container from a new image
             docker run --restart always \
             --publish 8080:8080 \
-            --name $(echo $CONTAINER_NAME) \
+            --name dima-portal-api \
             dimakalinin/dima-portal-api:latest
