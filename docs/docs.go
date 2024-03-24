@@ -195,11 +195,11 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Auth data and User details",
-                        "name": "user",
+                        "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.ReqWithAuth-entity_User"
+                            "$ref": "#/definitions/entity.ReqWithApiToken-entity_User"
                         }
                     }
                 ],
@@ -207,7 +207,53 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/http.Resp-v1_resp"
+                            "$ref": "#/definitions/http.Resp-v1_respRegisterUser"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http.RespErr"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/http.RespErr"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/send_proposal/": {
+            "post": {
+                "description": "Send email with proposal text to user and owner",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "v1"
+                ],
+                "summary": "Send email with proposal to user and owner",
+                "parameters": [
+                    {
+                        "description": "Project proposal data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.ReqWithApiToken-entity_ProjectProposal"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.Resp-v1_respSendProposal"
                         }
                     },
                     "400": {
@@ -271,7 +317,35 @@ const docTemplate = `{
                 }
             }
         },
-        "entity.ReqWithAuth-entity_User": {
+        "entity.ProjectProposal": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "reason": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.ReqWithApiToken-entity_ProjectProposal": {
+            "type": "object",
+            "properties": {
+                "auth": {
+                    "$ref": "#/definitions/entity.AuthData"
+                },
+                "data": {
+                    "$ref": "#/definitions/entity.ProjectProposal"
+                }
+            }
+        },
+        "entity.ReqWithApiToken-entity_User": {
             "type": "object",
             "properties": {
                 "auth": {
@@ -413,20 +487,6 @@ const docTemplate = `{
                 }
             }
         },
-        "http.Resp-v1_resp": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "meta": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/v1.resp"
-                }
-            }
-        },
         "http.Resp-v1_respDecodeJWT": {
             "type": "object",
             "properties": {
@@ -438,6 +498,34 @@ const docTemplate = `{
                 },
                 "result": {
                     "$ref": "#/definitions/v1.respDecodeJWT"
+                }
+            }
+        },
+        "http.Resp-v1_respRegisterUser": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "meta": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/v1.respRegisterUser"
+                }
+            }
+        },
+        "http.Resp-v1_respSendProposal": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "meta": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/v1.respSendProposal"
                 }
             }
         },
@@ -460,17 +548,6 @@ const docTemplate = `{
                 }
             }
         },
-        "v1.resp": {
-            "type": "object",
-            "properties": {
-                "jwt": {
-                    "$ref": "#/definitions/entity.JWTString"
-                },
-                "user": {
-                    "$ref": "#/definitions/entity.UserCommonInfo"
-                }
-            }
-        },
         "v1.respDecodeJWT": {
             "type": "object",
             "properties": {
@@ -481,6 +558,20 @@ const docTemplate = `{
                     "$ref": "#/definitions/entity.UserRole"
                 }
             }
+        },
+        "v1.respRegisterUser": {
+            "type": "object",
+            "properties": {
+                "jwt": {
+                    "$ref": "#/definitions/entity.JWTString"
+                },
+                "user": {
+                    "$ref": "#/definitions/entity.UserCommonInfo"
+                }
+            }
+        },
+        "v1.respSendProposal": {
+            "type": "object"
         }
     }
 }`

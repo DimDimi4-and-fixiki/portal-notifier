@@ -8,7 +8,7 @@ import (
 
 type JSONSerializable any
 
-type ReqWithAuth[DataT JSONSerializable] struct {
+type ReqWithApiToken[DataT JSONSerializable] struct {
 	Auth AuthData `json:"auth"`
 	Data DataT    `json:"data"`
 }

@@ -21,3 +21,6 @@
 
 # Go workspace file
 go.work
+
+# Creds for local dev
+/creds/

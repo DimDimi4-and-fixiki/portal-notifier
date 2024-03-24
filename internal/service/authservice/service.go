@@ -17,6 +17,7 @@ type userRepo interface {
 	GetByID(ctx context.Context, id uuid.UUID) (*e.UserDB, error)
 	GetByLogin(ctx context.Context, login string) (*e.UserDB, error)
 	UpdateCommonInfoByID(c context.Context, id uuid.UUID, data e.UserCommonInfo) (*e.UserDB, error)
+	GetByEmail(ctx context.Context, email string) (*e.UserDB, error)
 }
 
 type Service struct {

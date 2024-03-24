@@ -1,8 +1,10 @@
 package crypt
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"strconv"
 	"testing"
 )
 
@@ -14,11 +16,15 @@ func TestHash(t *testing.T) {
 		"____!!!___$$@@@**^^",
 		";_:*&^#!()-=+",
 	}
-	for _, tCase := range tCases {
-		hashedPass, err := Hash(tCase)
-		require.NoError(t, err)
-		verifyRes := VerifyPassword(tCase, hashedPass)
-		assert.True(t, verifyRes)
-
+	for i, tCase := range tCases {
+		pass := tCase
+		testName := fmt.Sprintf("case %s", strconv.Itoa(i))
+		t.Run(testName, func(t *testing.T) {
+			t.Parallel()
+			hashedPass, err := Hash(pass)
+			require.NoError(t, err)
+			verifyRes := VerifyPassword(pass, hashedPass)
+			assert.True(t, verifyRes)
+		})
 	}
 }

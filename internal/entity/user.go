@@ -37,6 +37,8 @@ func (UserDB) TableName() string {
 	return "users"
 }
 
+func (u UserDB) Email() string { return u.Info.Email }
+
 // User contains non-hashed data to pass through the app
 type User struct {
 	Info UserCommonInfo `json:"info"`

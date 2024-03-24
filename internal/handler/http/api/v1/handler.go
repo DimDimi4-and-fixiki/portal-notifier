@@ -8,7 +8,7 @@ import (
 )
 
 type UseCase interface {
-	SendProposal(ctx context.Context) (interface{}, error)
+	SendProposal(ctx context.Context, proposal e.ProjectProposal) error
 	Pong(ctx context.Context) (interface{}, error)
 	CreateUser(ctx context.Context, user *e.User) (e.UserDB, error)
 	AuthUserApiToken(ctx context.Context, login string, password string) (bool, error)
@@ -33,5 +33,6 @@ func (h *Handler) WithRoutes() {
 		v1.GET("/ping", h.Ping)
 		v1.POST("/register_user", h.RegisterUser)
 		v1.POST("/decode_jwt", h.DecodeJWT)
+		v1.POST("/send_proposal", h.SendProposal)
 	}
 }

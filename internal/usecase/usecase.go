@@ -15,10 +15,14 @@ type authService interface {
 	JWTFromUser(context.Context, *e.UserDB) (*e.JWTString, error)
 	DecodeJWTToUser(context.Context, string) (*e.UserJWT, error)
 	JWTFromLogin(ctx context.Context, login string) (*e.JWTString, error)
+	GetUserByLogin(ctx context.Context, login string) (*e.UserDB, error)
+	GetUserByEmail(ctx context.Context, email string) (*e.UserDB, error)
 }
 
 type notifyService interface {
-	// TODO: define interface to inject a service
+	SendProposalToOwner(ctx context.Context, proposal *e.ProjectProposal, ownerEmail string) error
+	SendProposalToUser(ctx context.Context, proposal *e.ProjectProposal) error
+	CreateProposal(ctx context.Context, proposal *e.ProjectProposalDB) error
 }
 
 type UseCase struct {

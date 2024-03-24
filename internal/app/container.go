@@ -14,11 +14,11 @@ import (
 type Container struct {
 	pg            *gorm.DB
 	httpServer    *graceful.Server
-	courierClient ICourierClient
+	courierClient CourierClient
 	deps          map[string]interface{}
 }
 
-func NewContainer(pg *gorm.DB, httpServer *graceful.Server, courierClient ICourierClient) *Container {
+func NewContainer(pg *gorm.DB, httpServer *graceful.Server, courierClient CourierClient) *Container {
 
 	return &Container{
 		pg:            pg,
@@ -37,7 +37,7 @@ func (c *Container) getPg() *gorm.DB {
 	return c.pg
 }
 
-func (c *Container) getCourier() ICourierClient {
+func (c *Container) getCourier() CourierClient {
 	return c.courierClient
 }
 

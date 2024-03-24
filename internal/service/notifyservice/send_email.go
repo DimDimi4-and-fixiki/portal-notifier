@@ -23,17 +23,16 @@ func (s *Service) sendProposal(ctx context.Context, msg e.EmailMsg, email string
 }
 
 func (s *Service) SendProposalToOwner(ctx context.Context, proposal *e.ProjectProposal, ownerEmail string) error {
-	msg := e.NewEmailMsg().FromProposalForOwner(*proposal, ownerEmail)
+	msg := e.NewEmailMsg().FromProposalForOwner(proposal, ownerEmail)
 	return s.sendProposal(ctx, msg, ownerEmail)
 }
 
-func (s *Service) SendProposalToUser(ctx context.Context, proposal *e.ProjectProposal, userEmail string) error {
-	msg := e.NewEmailMsg().FromProposalForUser(*proposal, userEmail)
-	return s.sendProposal(ctx, msg, userEmail)
+func (s *Service) SendProposalToUser(ctx context.Context, proposal *e.ProjectProposal) error {
+	msg := e.NewEmailMsg().FromProposalForUser(proposal, proposal.Email)
+	return s.sendProposal(ctx, msg, proposal.Email)
 }
 
-func (s *Service) CreateProposal(ctx context.Context, proposal *e.ProjectProposal) error {
+func (s *Service) CreateProposal(ctx context.Context, proposal *e.ProjectProposalDB) error {
 	_, err := s.proposalRepo.Create(ctx, proposal)
 	return err
-
 }

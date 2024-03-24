@@ -9,7 +9,7 @@ import (
 
 func (u *UseCase) AuthUserApiToken(ctx context.Context, login string, password string) (bool, error) {
 	data := e.GetUserInput{Login: login}
-	user, err := u.GetUser(ctx, data)
+	user, err := u.authService.GetUser(ctx, data)
 	if err != nil {
 		return false, err
 	}

@@ -28,5 +28,5 @@ func (r *Repository) Conn() *gorm.DB {
 }
 
 func (r *Repository) Entities() []interface{} {
-	return []interface{}{&entity.ProjectProposal{}}
+	return []interface{}{&entity.ProjectProposalDB{}}
 }

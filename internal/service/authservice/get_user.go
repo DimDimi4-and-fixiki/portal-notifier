@@ -35,3 +35,7 @@ func (s *Service) GetUserByLogin(ctx context.Context, login string) (*e.UserDB, 
 func (s *Service) GetUserByID(ctx context.Context, id uuid.UUID) (*e.UserDB, error) {
 	return s.userRepo.GetByID(ctx, id)
 }
+
+func (s *Service) GetUserByEmail(ctx context.Context, email string) (*e.UserDB, error) {
+	return s.userRepo.GetByEmail(ctx, email)
+}

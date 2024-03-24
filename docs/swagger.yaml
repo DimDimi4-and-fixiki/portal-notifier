@@ -28,7 +28,25 @@ definitions:
       token:
         type: string
     type: object
-  entity.ReqWithAuth-entity_User:
+  entity.ProjectProposal:
+    properties:
+      description:
+        type: string
+      email:
+        type: string
+      reason:
+        type: string
+      title:
+        type: string
+    type: object
+  entity.ReqWithApiToken-entity_ProjectProposal:
+    properties:
+      auth:
+        $ref: '#/definitions/entity.AuthData'
+      data:
+        $ref: '#/definitions/entity.ProjectProposal'
+    type: object
+  entity.ReqWithApiToken-entity_User:
     properties:
       auth:
         $ref: '#/definitions/entity.AuthData'
@@ -121,15 +139,6 @@ definitions:
       result:
         $ref: '#/definitions/entity.UserCommonInfo'
     type: object
-  http.Resp-v1_resp:
-    properties:
-      message:
-        type: string
-      meta:
-        type: string
-      result:
-        $ref: '#/definitions/v1.resp'
-    type: object
   http.Resp-v1_respDecodeJWT:
     properties:
       message:
@@ -138,6 +147,24 @@ definitions:
         type: string
       result:
         $ref: '#/definitions/v1.respDecodeJWT'
+    type: object
+  http.Resp-v1_respRegisterUser:
+    properties:
+      message:
+        type: string
+      meta:
+        type: string
+      result:
+        $ref: '#/definitions/v1.respRegisterUser'
+    type: object
+  http.Resp-v1_respSendProposal:
+    properties:
+      message:
+        type: string
+      meta:
+        type: string
+      result:
+        $ref: '#/definitions/v1.respSendProposal'
     type: object
   http.RespErr:
     properties:
@@ -151,19 +178,21 @@ definitions:
       token:
         type: string
     type: object
-  v1.resp:
-    properties:
-      jwt:
-        $ref: '#/definitions/entity.JWTString'
-      user:
-        $ref: '#/definitions/entity.UserCommonInfo'
-    type: object
   v1.respDecodeJWT:
     properties:
       user_login:
         type: string
       user_role:
         $ref: '#/definitions/entity.UserRole'
+    type: object
+  v1.respRegisterUser:
+    properties:
+      jwt:
+        $ref: '#/definitions/entity.JWTString'
+      user:
+        $ref: '#/definitions/entity.UserCommonInfo'
+    type: object
+  v1.respSendProposal:
     type: object
 info:
   contact:
@@ -286,17 +315,17 @@ paths:
       parameters:
       - description: Auth data and User details
         in: body
-        name: user
+        name: data
         required: true
         schema:
-          $ref: '#/definitions/entity.ReqWithAuth-entity_User'
+          $ref: '#/definitions/entity.ReqWithApiToken-entity_User'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/http.Resp-v1_resp'
+            $ref: '#/definitions/http.Resp-v1_respRegisterUser'
         "400":
           description: Bad Request
           schema:
@@ -306,6 +335,36 @@ paths:
           schema:
             $ref: '#/definitions/http.RespErr'
       summary: Register new user with role person
+      tags:
+      - v1
+  /v1/send_proposal/:
+    post:
+      consumes:
+      - application/json
+      description: Send email with proposal text to user and owner
+      parameters:
+      - description: Project proposal data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entity.ReqWithApiToken-entity_ProjectProposal'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.Resp-v1_respSendProposal'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.RespErr'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/http.RespErr'
+      summary: Send email with proposal to user and owner
       tags:
       - v1
 swagger: "2.0"

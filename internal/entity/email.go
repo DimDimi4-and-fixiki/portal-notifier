@@ -12,16 +12,16 @@ func NewEmailMsg() *EmailMsg {
 	return &EmailMsg{}
 }
 
-func (e *EmailMsg) FromProposalForOwner(proposal ProjectProposal, toEmail string) EmailMsg {
-	e.Title = fmt.Sprintf("Project proposal from %s", proposal.User.Name())
-	e.Text = proposal.EmailMessageTextForOwner()
+func (e *EmailMsg) FromProposalForOwner(proposal *ProjectProposal, toEmail string) EmailMsg {
+	e.Title = fmt.Sprintf("Project proposal from user with email=%s", proposal.Email)
+	e.Text = proposal.EmailMessageForOwner()
 	e.ToEmail = toEmail
 	return *e
 }
 
-func (e *EmailMsg) FromProposalForUser(proposal ProjectProposal, toEmail string) EmailMsg {
+func (e *EmailMsg) FromProposalForUser(proposal *ProjectProposal, toEmail string) EmailMsg {
 	e.Title = "Meow from Dima :)"
-	e.Text = proposal.EmailMessageTextForUser()
+	e.Text = proposal.EmailMessageForUser()
 	e.ToEmail = toEmail
 	return *e
 }

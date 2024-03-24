@@ -7,29 +7,34 @@ import (
 )
 
 type ProjectProposal struct {
-	gorm.Model
-	Title       string    `json:"title"`
-	Description string    `json:"description"`
-	Reason      string    `json:"reason"`
-	UserRefer   uuid.UUID `json:"user_refer"`
-	User        UserDB    `gorm:"foreignKey:UserRefer"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Reason      string `json:"reason"`
+	Email       string `json:"email"`
 }
 
-func (p ProjectProposal) EmailMessageTextForOwner() string {
+type ProjectProposalDB struct {
+	gorm.Model
+	Proposal  ProjectProposal `gorm:"embedded" json:"proposal"`
+	UserRefer uuid.UUID       `json:"user_refer"`
+	User      UserDB          `gorm:"foreignKey:UserRefer"`
+}
+
+func (p *ProjectProposal) EmailMessageForOwner() string {
 	return fmt.Sprintf(
 		"Whoosh :)"+
-			"\n"+"Project proposal from user with login: %s"+
+			"\n"+"Project proposal from user with email: %s"+
 			"\n"+"Title: %s"+
 			"\n"+"Description: %s"+
 			"\n"+"Reason: %s",
-		p.User.Login(),
+		p.Email,
 		p.Title,
 		p.Description,
 		p.Reason,
 	)
 }
 
-func (p ProjectProposal) EmailMessageTextForUser() string {
+func (p *ProjectProposal) EmailMessageForUser() string {
 	return fmt.Sprintf(
 		"Ehoooo :)"+
 			"\n"+"Your project proposal for project with title %s"+

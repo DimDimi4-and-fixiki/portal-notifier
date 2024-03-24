@@ -27,8 +27,9 @@ tasks:
       - go run main.go http
   http-local:
     cmds:
+      - go install github.com/mitranim/gow@latest
       - swag init -g ./cmd/http.go -o docs/
-      - go run main.go http
+      - gow run main.go http
   db-local:
     cmd: docker-compose -f docker-compose.local.yml up postgres
   download:
