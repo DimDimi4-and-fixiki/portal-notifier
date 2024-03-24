@@ -86,6 +86,7 @@ jobs:
           context: .
           dockerfile: ./Dockerfile
           push: true
+          image: dimakalinin/dima-portal-api
           tags: ${{ steps.meta.outputs.tags }}
           addLatest: true
           labels: ${{ steps.meta.outputs.labels }}
