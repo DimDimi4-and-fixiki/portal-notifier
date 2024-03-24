@@ -81,15 +81,12 @@ jobs:
             type=sha
 
       - name: Build and push Docker image
-        uses: mr-smithers-excellent/docker-build-push@v6
+        uses: docker/build-push-action@v5
         with:
           context: .
-          dockerfile: ./Dockerfile
-          registry: hub.docker.com
+          file: ./Dockerfile
           push: true
-          image: dimakalinin/dima-portal-api
-          tags: ${{ steps.meta.outputs.tags }}
-          addLatest: true
+          tags: ${{ steps.meta.outputs.tags }}, latest
           labels: ${{ steps.meta.outputs.labels }}
 
 #  deploy:
