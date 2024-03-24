@@ -20,13 +20,13 @@ type Logger interface {
 	Fatal(string, ...zapcore.Field)
 }
 
-type IHttpServer interface {
+type HttpServer interface {
 	GetGracefulServer() *graceful.Server
 	Start() error
 	RegisterRoutes(r *http.Router)
 }
 
-type ICourierClient interface {
+type CourierClient interface {
 	SendTextMessage(context.Context, e.EmailMsg) (*courierc.SendMessageResponse, error)
 }
 
@@ -37,8 +37,8 @@ type App struct {
 	cOnce *sync.Once
 
 	pg            *gorm.DB
-	server        IHttpServer
-	courierClient ICourierClient
+	server        HttpServer
+	courierClient CourierClient
 
 	logger Logger
 }

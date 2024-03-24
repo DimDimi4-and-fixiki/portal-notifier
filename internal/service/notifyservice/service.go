@@ -13,7 +13,7 @@ type userRepo interface {
 }
 
 type proposalRepo interface {
-	Create(ctx context.Context, proposal *e.ProjectProposal) (*e.ProjectProposal, error)
+	Create(ctx context.Context, proposal *e.ProjectProposalDB) (*e.ProjectProposalDB, error)
 }
 
 type courierClient interface {

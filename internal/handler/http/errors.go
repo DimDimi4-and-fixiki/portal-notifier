@@ -24,6 +24,14 @@ func ValidationError(err error) Err {
 	}
 }
 
+func InternalError(err error) Err {
+	var ErrInternal = errors.New("internal error")
+	return Err{
+		code: "3000",
+		err:  fmt.Errorf("%w: %w", ErrInternal, err),
+	}
+}
+
 func AuthError(err error) Err {
 	var ErrAuth = errors.New("error while authentication")
 	return Err{

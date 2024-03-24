@@ -8,7 +8,7 @@ import (
 	v1 "notify/internal/handler/http/api/v1"
 )
 
-func (a *App) newGracefulServer() IHttpServer {
+func (a *App) newGracefulServer() HttpServer {
 	return http.NewGracefulServer(a.cfg.Server)
 }
 
