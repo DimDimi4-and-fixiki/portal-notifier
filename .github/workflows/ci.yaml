@@ -8,6 +8,12 @@ on:
     branches:
       - main
 
+env:
+  IMAGE_NAME: "dima-portal-api"
+  DOCKER_REPO_NAME : "dima-portal-api"
+  CONTAINER_NAME: "dima-portal-api"
+  ENV_FILE_PATH: "./.env"
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -30,3 +36,77 @@ jobs:
 
       - name: Test
         run: go test ./...
+
+  build_and_push:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    needs: test
+
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Checkout master
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKER_HUB_USERNAME }}/$(echo $DOCKER_REPO_NAME)
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+#  deploy:
+#    runs-on: ubuntu-latest
+#    if: github.event_name == 'push'
+#    needs: build_and_push
+#
+#    steps:
+#      - name: Deploy to Digital Ocean droplet via SSH action
+#        uses: appleboy/ssh-action@v1.0.3
+#        with:
+#          host: ${{ secrets.HOST }}
+#          username: ${{ secrets.USERNAME }}
+#          key: ${{ secrets.SSHKEY }}
+#          port: ${{ secrets.PORT }}
+#          envs: IMAGE_NAME,REGISTRY,GITHUB_SHA,LOGS_PATH,ENV_FILE_PATH,CONTAINER_NAME
+#          script: |
+#            # Login into Digital Ocean Registry
+#            docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} $(echo $REGISTRY)
+#
+#            # Set env variables
+#            export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+#            export ACCESS_KEY=${{ secrets.ACCESS_KEY }}
+#            export SECRET_KEY=${{ secrets.SECRET_KEY }}
+#
+#            # Stop running container
+#            docker stop $(echo $CONTAINER_NAME)
+#
+#            # Remove old container
+#            docker rm $(echo $CONTAINER_NAME)
+#
+#            # Run a new container from a new image
+#            docker run --env-file $(echo $ENV_FILE_PATH) \
+#            -v $(echo $LOGS_PATH):/logs -d \
+#            --restart always \
+#            --publish 8000:8000 \
+#            --name $(echo $CONTAINER_NAME) \
+#            --link=jewerly-db:db \
+#            $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
