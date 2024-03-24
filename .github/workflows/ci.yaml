@@ -23,8 +23,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Lint
-        uses: pre-commit/action@v3.0.1
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v4
+        with:
+          version: v1.54
 
       - name: Test
         run: go test ./...
