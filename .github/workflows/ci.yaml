@@ -108,7 +108,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           username: ${{ secrets.SSH_USER }}
           source: "ci/docker-compose.yaml"
-          target: docker_compose
+          target: /root/docker_compose
       - name: Deploy app to VDS
         uses: appleboy/ssh-action@v1.0.3
         with:
