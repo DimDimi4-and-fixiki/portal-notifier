@@ -88,3 +88,12 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}, dimakalinin/dima-portal-api:latest
           labels: ${{ steps.meta.outputs.labels }}
+      - name: Deploy app to VDS
+        uses: alex-ac/github-action-ssh-docker-compose@v2.0.3
+        with:
+          ssh_host: ${{ secrets.SSH_HOST }}
+          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh_user: ${{ secrets.SSH_USER }}
+          docker_compose_prefix: dima-portal-back
+          docker_compose_down: 'true'
+          docker_compose_filename: ./ci/docker-compose.yaml
