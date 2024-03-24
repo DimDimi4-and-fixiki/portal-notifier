@@ -101,6 +101,14 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
+      - name: Copy docker-compose on VDS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          username: ${{ secrets.SSH_USER }}
+          source: "ci/docker-compose.yaml"
+          target: docker_compose
       - name: Deploy app to VDS
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -108,14 +116,11 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           username: ${{ secrets.SSH_USER }}
           script: |
-            # Stop running container
-            docker stop dima-portal-api
-
-            # Remove old container
-            docker rm dima-portal-api
+            sleep 3
+            cd docker_compose
+            # Stop all
+            docker-compose down
 
             # Run a new container from a new image
-            docker run --restart always \
-            --publish 8080:8080 \
-            --name dima-portal-api \
-            dimakalinin/dima-portal-api:latest
+            docker-compose up \
+            --force-recreate --build
