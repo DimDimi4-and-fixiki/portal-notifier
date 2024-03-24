@@ -109,7 +109,7 @@ jobs:
         with:
           local: ci/docker-compose.yaml
           remote: /root/docker_compose/docker-compose.yaml
-          host: ${{ secrets.HOST }}
+          host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           privateKey: ${{ secrets.SSH_PRIVATE_KEY }}
 
