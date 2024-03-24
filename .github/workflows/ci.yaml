@@ -88,12 +88,31 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}, dimakalinin/dima-portal-api:latest
           labels: ${{ steps.meta.outputs.labels }}
-      - name: Deploy app to VDS
-        uses: alex-ac/github-action-ssh-docker-compose@v2.0.3
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build_and_push
+    steps:
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
         with:
-          ssh_host: ${{ secrets.SSH_HOST }}
-          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
-          ssh_user: ${{ secrets.SSH_USER }}
-          docker_compose_prefix: dima-portal-back
-          docker_compose_down: 'true'
-          docker_compose_filename: ./ci/docker-compose.yaml
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Deploy app to VDS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          username: ${{ secrets.SSH_USER }}
+          script: |
+            # Stop running container
+            docker stop $(echo $CONTAINER_NAME)
+
+            # Remove old container
+            docker rm $(echo $CONTAINER_NAME)
+
+            # Run a new container from a new image
+            docker run --restart always \
+            --publish 8080:8080 \
+            --name $(echo $CONTAINER_NAME) \
+            dimakalinin/dima-portal-api:latest
