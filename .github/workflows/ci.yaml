@@ -45,7 +45,6 @@ jobs:
 
   build_and_push:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
     needs: test
 
     steps:
