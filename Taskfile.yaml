@@ -36,4 +36,4 @@ tasks:
     cmds:
       - GOPROXY=https://proxy.golang.org,direct go get
   encode-env:
-    cmd: openssl base64 -A -in .env -out env.txt
+    cmd: openssl base64 -A -in .env-prod -out env.txt
