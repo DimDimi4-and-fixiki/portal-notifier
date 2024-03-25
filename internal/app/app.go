@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"errors"
+	"fmt"
 	courierc "github.com/trycourier/courier-go/v3"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/tylerb/graceful.v1"
@@ -53,12 +54,7 @@ func NewApp() (*App, error) {
 		cfg: cfg,
 	}
 
-	//goro:init logger
 	app.initLogger()
-
-	//goro:init healthChecker
-	//app.initHealthChecker()
-
 	pgConn, err := app.newPgConnect(cfg.Db)
 	if err != nil {
 		return nil, err
@@ -75,6 +71,7 @@ func NewApp() (*App, error) {
 
 	app.c = NewContainer(app.pg, app.server.GetGracefulServer(), app.courierClient)
 
+	app.logger.Info(fmt.Sprintf("Running server on host=%s, port=%s", cfg.Server.Host, cfg.Server.Port))
 	return app, nil
 }
 
